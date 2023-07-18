@@ -1,0 +1,32 @@
+import * as THREE from "three";
+
+export default function galaxyBackground(scene) {
+  function getRandomPosition() {
+    const x = Math.random() * 100 - 50; // Random x position between -5 and 5
+    const y = Math.random() * 100 - 50; // Random y position between -5 and 5
+    const z = Math.random() * 100 - 50; // Random z position between -5 and 5
+    return { x, y, z };
+  }
+  function getRandomColor() {
+    var r = Math.floor(Math.random() * 256);
+    var g = Math.floor(Math.random() * 256);
+    var b = Math.floor(Math.random() * 256);
+    var color = "rgb(" + r + ", " + g + ", " + b + ")";
+    return color;
+  }
+
+  function createSphere() {
+    const geometry = new THREE.SphereGeometry(1, 32, 32);
+    const material = new THREE.MeshBasicMaterial({ color: getRandomColor() });
+    const sphere = new THREE.Mesh(geometry, material);
+
+    const position = getRandomPosition();
+    sphere.position.set(position.x, position.y, position.z);
+    sphere.scale.set(0.03, 0.03, 0.03);
+    scene.add(sphere);
+  }
+
+  for (let i = 0; i < 1000; i++) {
+    createSphere();
+  }
+}
