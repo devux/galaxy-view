@@ -21,8 +21,8 @@ document.body.appendChild(renderer.domElement);
 const earthGeometry = new THREE.SphereGeometry(0.6, 32, 32);
 const earthMaterial = new THREE.MeshPhongMaterial({
   roughness: 0.5,
-  map: new THREE.TextureLoader().load("texture/earthmap1k.jpg"),
-  bumpMap: new THREE.TextureLoader().load("texture/earthbump.jpg"),
+  map: new THREE.TextureLoader().load("assets/texture/earthmap1k.jpg"),
+  bumpMap: new THREE.TextureLoader().load("assets/texture/earthbump.jpg"),
   bumpScale: 0.3,
 });
 const earthMesh = new THREE.Mesh(earthGeometry, earthMaterial);
@@ -30,7 +30,7 @@ scene.add(earthMesh);
 
 const cloudGeometry = new THREE.SphereGeometry(0.63, 32, 32);
 const cloudMaterial = new THREE.MeshPhongMaterial({
-  map: new THREE.TextureLoader().load("texture/earthCloud.png"),
+  map: new THREE.TextureLoader().load("assets/texture/earthCloud.png"),
   transparent: 10,
 });
 const cloudMesh = new THREE.Mesh(cloudGeometry, cloudMaterial);
