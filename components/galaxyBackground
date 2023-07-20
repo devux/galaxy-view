@@ -17,7 +17,7 @@ export default function galaxyBackground(scene) {
 
   function createSphere() {
     const geometry = new THREE.SphereGeometry(1, 32, 32);
-    const material = new THREE.MeshBasicMaterial({ color: getRandomColor() });
+    const material = new THREE.MeshBasicMaterial({ color: "aluminium" });
     const sphere = new THREE.Mesh(geometry, material);
 
     const position = getRandomPosition();
