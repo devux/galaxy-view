@@ -9,7 +9,7 @@ const camera = new THREE.PerspectiveCamera(
   0.1,
   1000
 );
-camera.position.z = 15;
+camera.position.z = 40;
 scene.add(camera);
 
 const renderer = new THREE.WebGLRenderer();
@@ -35,6 +35,8 @@ const cloudMaterial = new THREE.MeshPhongMaterial({
   transparent: 10,
 });
 const cloudMesh = new THREE.Mesh(cloudGeometry, cloudMaterial);
+cloudMesh.name = "earth"
+
 scene.add(cloudMesh);
 
 
@@ -47,24 +49,12 @@ const moonMaterial = new THREE.MeshPhongMaterial({
   map: new THREE.TextureLoader().load("assets/texture/moon.jpg"),
 });
 const moonMesh = new THREE.Mesh(moonGeometry, moonMaterial);
-earthMesh.add(moonMesh);
+moonMesh.name = "moon"
+scene.add(moonMesh);
 // moonMesh.position.x= 1.5;  
 
-const moonOrbit = 10;
-moonMesh.position.set(moonOrbit, 0, 0);
+moonMesh.position.set(0, 10, 0);
 
-    // Add a click event listener to the Moon
-    moonMesh.addEventListener('click', () => {
-      // Move the camera to view the Moon
-      console.log("on moon click")
-      // const moonPosition = moon.position.clone();
-      // const targetPosition = moonPosition.add(new THREE.Vector3(10, 5, 10));
-      // const tweenDuration = 1000; // Animation duration in milliseconds
-      // new TWEEN.Tween(camera.position).to(targetPosition, tweenDuration).start();
-    });
-
-
-    
 const ambienLight = new THREE.AmbientLight(0xffffff, 0.2);
 scene.add(ambienLight);
 
@@ -73,19 +63,61 @@ pointLight.position.set(5, 3, 5);
 scene.add(pointLight);
 galaxyBackground(scene);
 
+    // Create a raycaster
+    const raycaster = new THREE.Raycaster();
+    const mouse = new THREE.Vector2();
 
+    // Add a click event listener to the canvas
+    renderer.domElement.addEventListener("click", onCanvasClick);
+
+    // Render the scene
+    // renderer.render(scene, camera);
+
+    function onCanvasClick(event) {
+        // Calculate normalized device coordinates (-1 to +1) for the mouse click
+        mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
+        mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
+
+        // Update the picking ray with the camera and mouse position
+        raycaster.setFromCamera(mouse, camera);
+        const intersects = raycaster.intersectObjects(scene.children);
+
+        // Calculate objects intersecting the picking ray
+        if (intersects.length > 0) {
+
+          let meshName = intersects[0].object.name
+          if (meshName === "earth") {
+            console.log("onclick earth")
+          } else if( meshName === "moon"){
+            console.log("onclick moon")
+          }
+
+            // If the ray intersects the sphere, handle the click
+        }
+    }
+
+
+
+
+let moonAngle = 0
+const moonOrbitRadius = 30; // Adjust the Moon's orbit radius
 function animate() {
   requestAnimationFrame(animate);
   earthMesh.rotation.y -= 0.0015;
   cloudMesh.rotation.y -= 0.001;
   moonMesh.rotation.y -= 0.000015;
+  
+    // Update Moon's position (circular orbit)
+    const earthPosition = earthMesh.position.clone();
+    moonAngle += 0.005; // Adjust the Moon's orbit speed
+    const offsetX = moonOrbitRadius * Math.cos(moonAngle);
+    const offsetZ = moonOrbitRadius * Math.sin(moonAngle);
+    moonMesh.position.set(earthPosition.x + offsetX, 0, earthPosition.z + offsetZ);
 
-    // Rotate Moon around the Earth
-    // moonMesh.position.x = moonOrbit * Math.cos(Date.now() * 0.001);
-    // moonMesh.position.z = moonOrbit * Math.sin(Date.now() * 0.001);
-
+  
   renderer.render(scene, camera);
   controls.update();
+  
 }
 
 animate();
